@@ -4,6 +4,7 @@ from urllib.parse import urljoin
 import bs4
 import time
 import pymongo
+from database.database import Database
 
 
 class GbBlogParse:
@@ -13,7 +14,7 @@ class GbBlogParse:
     }
     __parse_time = 0
 
-    def __init__(self, start_url, db, delay=1.0):
+    def __init__(self, start_url, db: Database, delay=1.0):
         self.start_url = start_url
         self.db = db
         self.delay = delay
@@ -102,11 +103,11 @@ class GbBlogParse:
         return data
 
     def _save(self, data):
-        collection = self.db["gb_parse_24_05"]["gb_parse"]
-        collection.insert_one(data)
+        self.db.add_post(data)
 
 
 if __name__ == "__main__":
-    db_client = pymongo.MongoClient("mongodb://localhost:27017")
+    db_client = Database("sqlite:///gb_blog.db")
     parser = GbBlogParse("https://gb.ru/posts", db_client, 0.5)
     parser.run()
+    print(1)
