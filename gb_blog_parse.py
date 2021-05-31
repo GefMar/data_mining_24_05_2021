@@ -78,14 +78,28 @@ class GbBlogParse:
         soup = bs4.BeautifulSoup(response.text, "lxml")
         author_name_tag = soup.find("div", itemprop="author")
         data = {
-            "url": response.url,
-            "title": soup.find("h1", attrs={"class": "blogpost-title"}).text,
-            "author": {
+            "post_data": {
+                "title": soup.find("h1", attrs={"class": "blogpost-title"}).text,
+                "url": response.url,
+                "id": int(soup.find("comments").attrs.get("commentable-id")),
+            },
+            "author_data": {
                 "url": urljoin(response.url, author_name_tag.parent.attrs.get("href")),
                 "name": author_name_tag.text,
             },
+            "tags_data": [
+                {"name": tag.text, "url": urljoin(response.url, tag.attrs.get("href"))}
+                for tag in soup.find_all("a", attrs={"class": "small"})
+            ],
+            "comments_data": self._get_comments(soup.find("comments").attrs.get("commentable-id")),
         }
         self._save(data)
+
+    def _get_comments(self, post_id):
+        api_path = f"/api/v2/comments?commentable_type=Post&commentable_id={post_id}&order=desc"
+        response = self._get_response(urljoin(self.start_url, api_path))
+        data = response.json()
+        return data
 
     def _save(self, data):
         collection = self.db["gb_parse_24_05"]["gb_parse"]
