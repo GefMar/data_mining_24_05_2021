@@ -7,13 +7,13 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = "gb_parse_24_05"
-
-SPIDER_MODULES = ["gb_parse.spiders"]
-NEWSPIDER_MODULE = "gb_parse.spiders"
+BOT_NAME = "gb_parse_18_05"
 
 LOG_ENABLE = True
 LOG_LEVEL = "DEBUG"
+
+SPIDER_MODULES = ["gb_parse.spiders"]
+NEWSPIDER_MODULE = "gb_parse.spiders"
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:88.0) Gecko/20100101 Firefox/88.0"
