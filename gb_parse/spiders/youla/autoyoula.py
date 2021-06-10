@@ -1,7 +1,7 @@
 import pymongo
 import scrapy
-from .xpath_selectors import BRANDS, CARS, PAGINATION, CAR_DATA
-from ..loaders import AutoyoulaLoader
+from .xpath_selectors import BRANDS, PAGINATION, CARS, CAR_DATA
+from .loaders import AutoyoulaLoader
 
 
 class AutoyoulaSpider(scrapy.Spider):
@@ -27,6 +27,6 @@ class AutoyoulaSpider(scrapy.Spider):
     def car_parse(self, response):
         loader = AutoyoulaLoader(response=response)
         loader.add_value("url", response.url)
-        for key, selector in CAR_DATA.items():
-            loader.add_xpath(key, **selector)
+        for key, value in CAR_DATA.items():
+            loader.add_xpath(field_name=key, **value)
         yield loader.load_item()
